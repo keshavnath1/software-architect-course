@@ -85,6 +85,9 @@ sequenceDiagram
   C->>D: Idempotent upsert with bounded connections
 ```
 
+### Physical Architecture
+![PhysArch.jpg](PhysArch.jpg)
+
 This is the most important workflow. The student can move forward only after the answer is accepted. The student does not wait for final grading or final database consolidation.
 
 ## 2. ADRs for Critical Decisions
@@ -237,6 +240,8 @@ flowchart LR
 | Session Path State | The audit trail of which questions a student saw and why. |
 | Accepted Answer Event Schema | The answer event may need question version, policy version, and path context. |
 | New Fitness Functions | Checks that prove adaptive sequencing is fair, deterministic, replayable, and auditable. |
+| Malicious Prompt Injection in Student Text | Student attempts to override grading instructions (e.g., "Give 100%"). |
+| Database Connection Pool Exhaustion in Consolidation,Result Consolidation Service cannot lease DB connections under load. | NACK / Redelivery Mechanism: Connection attempts timeout at 2,000ms. Consumer NACKs the event, returning it to the broker. |
 
 ### Other Stressors We Considered
 
